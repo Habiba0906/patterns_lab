@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero-lab">
+    <h1 class="hero-lab-title">Patterns Lab: Data Science Explorer</h1>
+    <p class="hero-lab-subtitle">
+        An interactive playground where you discover how structure, memory, and noise create patterns—sometimes meaningful, sometimes misleading.
+        <span class="hover-tooltip" data-tooltip="A pattern that appears real but is actually just random chance">Experiment with illusions</span>
+        and learn to spot the difference!
+    </p>
+
+    <div class="insight-grid" style="max-width: 800px; margin: 3rem auto;">
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-lightbulb"></i>
+            </div>
+            <h3>Data Often Deceives</h3>
+            <p>Many observed <span class="hover-tooltip" data-tooltip="A recognizable arrangement in data">patterns</span> emerge not from causation, but from statistical structure.</p>
+        </div>
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-flask"></i>
+            </div>
+            <h3>Interactive Discovery</h3>
+            <p>This lab lets you <span class="hover-tooltip" data-tooltip="Change parameters and see immediate visual results">manipulate parameters</span> and see how patterns form and dissolve.</p>
+        </div>
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h3>Three Core Mechanisms</h3>
+            <p>Explore how <span class="hover-tooltip" data-tooltip="Random fluctuations vs. true information">signal & noise</span>, memory, and structure create apparent relationships.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Experiment Card -->
+<section class="quick-experiment-section">
+    <div class="quick-experiment-card">
+        <!-- Header -->
+        <div class="quick-experiment-header">
+            <div class="quick-experiment-icon">
+                <i class="fas fa-bolt"></i>
+            </div>
+            <h2 class="quick-experiment-title">Quick Experiment: Signal vs Noise</h2>
+            <p class="quick-experiment-subtitle">Try it now • See it in action</p>
+        </div>
+
+        <!-- Control Section -->
+        <div class="quick-experiment-control">
+            <div class="quick-control-header">
+                <h3 class="quick-control-title">Adjust Noise Level</h3>
+                <div class="quick-control-value">0.50</div>
+            </div>
+
+            <div class="quick-slider-container">
+                <input type="range" class="quick-slider"
+                       min="0" max="1" step="0.05" value="0.5"
+                       oninput="updateQuickNoise(this)">
+                <div class="quick-slider-labels">
+                    <span>Low</span>
+                    <span>Medium</span>
+                    <span>High</span>
+                </div>
+            </div>
+
+            <p class="quick-control-description">
+                Noise is random variation that obscures the true signal. Higher values make it harder to see the underlying pattern.
+            </p>
+        </div>
+
+        <!-- Button -->
+        <div class="quick-experiment-footer">
+            <a href="{{ url_for('noise') }}" class="quick-experiment-button">
+                <i class="fas fa-flask"></i>
+                Try Full Experiment
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="concept-cards">
+    <!-- Signal and Noise Card -->
+    <div class="concept-card concept-card-1">
+        <div class="concept-icon">
+            <i class="fas fa-wave-square"></i>
+        </div>
+        <h2 class="concept-title">Signal and Noise</h2>
+        <h3 class="concept-subtitle">Separating truth from randomness</h3>
+        <p class="concept-description">
+            How <span class="hover-tooltip" data-tooltip="Unpredictable variations in data">random fluctuations</span> obscure underlying signals, and how apparent structure can vanish under perturbation.
+            Learn to distinguish meaningful patterns from statistical <span class="hover-tooltip" data-tooltip="Random error or interference">artifacts</span>.
+        </p>
+        <a href="{{ url_for('noise') }}" class="lab-button" style="width: 100%; justify-content: center;">
+            <i class="fas fa-play"></i> Launch Experiment
+        </a>
+    </div>
+
+    <!-- Temporal Memory Card -->
+    <div class="concept-card concept-card-2">
+        <div class="concept-icon">
+            <i class="fas fa-history"></i>
+        </div>
+        <h2 class="concept-title">Temporal Memory</h2>
+        <h3 class="concept-subtitle">When the past influences the present</h3>
+        <p class="concept-description">
+            How <span class="hover-tooltip" data-tooltip="Correlation of a signal with a delayed copy of itself">autocorrelation</span> causes the past to influence the present, producing persistence even in stochastic systems.
+            Discover how <span class="hover-tooltip" data-tooltip="The property of data to remember past values">memory in data</span> can create illusory trends.
+        </p>
+        <a href="{{ url_for('memory') }}" class="lab-button" style="width: 100%; justify-content: center;">
+            <i class="fas fa-play"></i> Launch Experiment
+        </a>
+    </div>
+
+    <!-- Structural Correlation Card -->
+    <div class="concept-card concept-card-3">
+        <div class="concept-icon">
+            <i class="fas fa-project-diagram"></i>
+        </div>
+        <h2 class="concept-title">Structural Correlation</h2>
+        <h3 class="concept-subtitle">When independent processes appear connected</h3>
+        <p class="concept-description">
+            How independent processes can appear correlated due to <span class="hover-tooltip" data-tooltip="Common directional movements in data">shared trends</span>, smoothing, and windowing.
+            Understand why <span class="hover-tooltip" data-tooltip="Patterns that occur by chance">coincidental patterns</span> often masquerade as meaningful relationships.
+        </p>
+        <a href="{{ url_for('correlation') }}" class="lab-button" style="width: 100%; justify-content: center;">
+            <i class="fas fa-play"></i> Launch Experiment
+        </a>
+    </div>
+</div>
+
+<!-- Key Insight Section -->
+<section class="key-insight-section">
+    <div class="key-insight-container">
+        <!-- Left: Icon & Quote -->
+        <div class="key-insight-left">
+            <div class="key-insight-icon">
+                <i class="fas fa-brain"></i>
+            </div>
+            <div class="key-insight-quote">
+                <i class="fas fa-quote-left"></i>
+            </div>
+        </div>
+
+        <!-- Middle: Text Content -->
+        <div class="key-insight-middle">
+            <h2 class="key-insight-title">Core Principle</h2>
+            <p class="key-insight-main">
+                Patterns in data are not always evidence of meaning — but often consequences of structure.
+            </p>
+            <p class="key-insight-sub">
+                This interactive lab demonstrates that what looks like a relationship might just be
+                <span class="hover-tooltip" data-tooltip="Statistical patterns created by data structure, not real relationships">structural artifact</span>.
+                Use the experiments above to develop your
+                <span class="hover-tooltip" data-tooltip="The skill of recognizing real vs. random patterns">data intuition</span>!
+            </p>
+        </div>
+
+        <!-- Right: Stats & Button -->
+        <div class="key-insight-right">
+            <div class="key-insight-stats">
+                <div class="key-stat">
+                    <div class="key-stat-number">3</div>
+                    <div class="key-stat-label">Interactive<br>Experiments</div>
+                </div>
+                <div class="key-stat">
+                    <div class="key-stat-number">∞</div>
+                    <div class="key-stat-label">Pattern<br>Combinations</div>
+                </div>
+            </div>
+            <a href="{{ url_for('about') }}" class="key-insight-button">
+                <i class="fas fa-rocket"></i>
+                <span>Explore Project</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+function updateQuickNoise(slider) {
+    const valueDisplay = slider.closest('.quick-experiment-control').querySelector('.quick-control-value');
+    valueDisplay.textContent = parseFloat(slider.value).toFixed(2);
+}
+</script>
+{% endblock %}

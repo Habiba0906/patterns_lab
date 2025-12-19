@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero-lab">
+    <h1 class="hero-lab-title">Signal and Noise</h1>
+    <p class="hero-lab-subtitle">
+        How random fluctuations obscure underlying signals, and how apparent structure can vanish under perturbation.
+    </p>
+</section>
+
+<div class="experiment-container">
+    <!-- Interactive Control Panel -->
+    <div class="lab-control-panel" style="max-width: 800px; margin: 0 auto 3rem;">
+        <h2 class="control-title">
+            <i class="fas fa-sliders-h"></i>
+            Interactive Parameters
+        </h2>
+
+        <div class="parameter-group" style="max-width: 600px; margin: 0 auto;">
+            <div class="parameter-header">
+                <span class="parameter-label">Noise Level</span>
+                <span class="parameter-value">{{ "%.2f"|format(level) }}</span>
+            </div>
+            <form method="get">
+                <input type="range"
+                       class="lab-slider"
+                       name="level"
+                       min="0"
+                       max="1"
+                       step="0.05"
+                       value="{{ level }}"
+                       oninput="updateNoiseValue(this); this.form.submit()">
+                <div class="slider-ticks">
+                    <span>Low</span>
+                    <span>Medium</span>
+                    <span>High</span>
+                </div>
+            </form>
+            <p class="parameter-explanation">
+                Adjust the noise intensity. Higher values introduce more random fluctuations that obscure the underlying signal.
+            </p>
+        </div>
+    </div>
+
+    <!-- Visualization Section -->
+    <div class="lab-visualization" style="max-width: 900px; margin: 0 auto 3rem;">
+        <h2 class="visualization-title">
+            <i class="fas fa-chart-line"></i>
+            Visualization
+        </h2>
+
+        <div class="visualization-wrapper">
+            <img src="{{ url_for('static', filename='figures/noise.png') }}"
+                 alt="Signal vs Noise plot"
+                 class="visualization-canvas">
+
+            <div class="visualization-legend">
+                <div class="legend-item">
+                    <span class="legend-dot signal"></span>
+                    <span class="legend-label">True Signal</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot observed"></span>
+                    <span class="legend-label">Observed Data (Signal + Noise)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="visualization-insight">
+    <h3><i class="fas fa-lightbulb" style="color: var(--primary-yellow);"></i> What You're Seeing</h3>
+    <p>The <span class="hover-tooltip" data-tooltip="Green dashed line - the underlying pattern we're trying to detect">true signal</span> (a sine wave) is what we'd see without any interference. The <span class="hover-tooltip" data-tooltip="Blue solid line with markers">observed data</span> shows what we actually measure — the signal plus random noise. The <span class="hover-tooltip" data-tooltip="Light blue shaded area">filled region</span> represents the noise amplitude. As you increase noise, it becomes harder to distinguish the true pattern from random fluctuations.</p>
+        </div>
+    </div>
+
+    <!-- Key Insights -->
+    <div class="insight-grid" style="max-width: 900px; margin: 0 auto;">
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-random"></i>
+            </div>
+            <h3>Random Fluctuations</h3>
+            <p>Random noise creates patterns that appear meaningful but are purely coincidental. This is why we need statistical testing!</p>
+        </div>
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-filter"></i>
+            </div>
+            <h3>Signal Extraction</h3>
+            <p>Statistical methods like averaging and smoothing help separate true signals from random variations in your data.</p>
+        </div>
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3>False Discoveries</h3>
+            <p>The more hypotheses you test, the higher the chance of finding spurious patterns that don't actually exist.</p>
+        </div>
+    </div>
+</div>
+
+<div style="text-align: center; margin-top: 3rem;">
+    <a href="{{ url_for('index') }}" class="back-lab-button">
+        <i class="fas fa-arrow-left"></i> Back to Overview
+    </a>
+</div>
+
+<script>
+function updateNoiseValue(slider) {
+    const valueSpan = slider.parentElement.previousElementSibling.querySelector('.parameter-value');
+    valueSpan.textContent = parseFloat(slider.value).toFixed(2);
+}
+</script>
+{% endblock %}

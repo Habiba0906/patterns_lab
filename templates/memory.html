@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero-lab">
+    <h1 class="hero-lab-title">Temporal Memory</h1>
+    <p class="hero-lab-subtitle">
+        How autocorrelation causes the past to influence the present, producing persistence even in stochastic systems.
+    </p>
+</section>
+
+<div class="experiment-container">
+    <!-- Interactive Control Panel -->
+    <div class="lab-control-panel" style="max-width: 800px; margin: 0 auto 3rem;">
+        <h2 class="control-title">
+            <i class="fas fa-sliders-h"></i>
+            Interactive Parameters
+        </h2>
+
+        <div class="parameter-grid" style="max-width: 700px; margin: 0 auto;">
+            <!-- Memory Strength -->
+            <div class="parameter-group">
+                <div class="parameter-header">
+                    <span class="parameter-label">Memory Strength</span>
+                    <span class="parameter-value">{{ "%.2f"|format(strength) }}</span>
+                </div>
+                <form method="get">
+                    <input type="range"
+                           class="lab-slider"
+                           name="strength"
+                           min="0"
+                           max="1"
+                           step="0.05"
+                           value="{{ strength }}"
+                           oninput="updateMemoryValue(this); this.form.submit()">
+                </form>
+                <div class="slider-ticks">
+                    <span>None</span>
+                    <span>Medium</span>
+                    <span>Strong</span>
+                </div>
+                <p class="parameter-explanation">
+                    Controls how strongly past values influence current values. Higher values create more persistent trends and smoother patterns.
+                </p>
+            </div>
+
+            <!-- Observation Window -->
+            <div class="parameter-group">
+                <div class="parameter-header">
+                    <span class="parameter-label">Observation Window</span>
+                    <span class="parameter-value">{{ window }}</span>
+                </div>
+                <form method="get">
+                    <input type="range"
+                           class="lab-slider"
+                           name="window"
+                           min="10"
+                           max="100"
+                           step="5"
+                           value="{{ window }}"
+                           oninput="updateMemoryValue(this); this.form.submit()">
+                </form>
+                <div class="slider-ticks">
+                    <span>10</span>
+                    <span>50</span>
+                    <span>100</span>
+                </div>
+                <p class="parameter-explanation">
+                    Number of data points shown. Smaller windows may reveal local patterns, while larger windows show long-term behavior.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visualization Section - WIDER CONTAINER -->
+    <div class="lab-visualization" style="max-width: 1200px; margin: 0 auto 3rem;">
+        <h2 class="visualization-title">
+            <i class="fas fa-chart-line"></i>
+            Visualization
+        </h2>
+
+        <div class="visualization-wrapper" style="padding: 2rem 1rem;">
+            <img src="{{ url_for('static', filename='figures/memory.png') }}"
+                 alt="Temporal Memory plot"
+                 class="visualization-canvas"
+                 style="max-width: 1100px;">
+
+            <div class="visualization-legend" style="margin-top: 2rem;">
+                <div class="legend-item">
+                    <span class="legend-dot" style="background-color: var(--primary-purple);"></span>
+                    <span class="legend-label">Time Series (α={{ "%.2f"|format(strength) }})</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background-color: var(--primary-cyan);"></span>
+                    <span class="legend-label">5-point Moving Average</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background-color: var(--primary-pink);"></span>
+                    <span class="legend-label">Autocorrelation (Bars)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background-color: var(--primary-yellow);"></span>
+                    <span class="legend-label">Recent Memory (Highlighted)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="visualization-insight" style="margin-top: 2rem;">
+            <h3><i class="fas fa-lightbulb" style="color: var(--primary-yellow);"></i> What You're Seeing</h3>
+            <p>
+                The <span class="hover-tooltip" data-tooltip="Purple line with circular markers">main time series</span> shows data where each point remembers previous values (autocorrelation = {{ "%.2f"|format(strength) }}).
+                The <span class="hover-tooltip" data-tooltip="Teal dashed line">moving average</span> smooths short-term fluctuations to reveal underlying trends.
+                The <span class="hover-tooltip" data-tooltip="Pink bars on the right">autocorrelation plot</span> shows how strongly past values correlate with future values at different time lags.
+                <span class="hover-tooltip" data-tooltip="Yellow highlighted bars">Recent lags</span> (1-5 steps) have the strongest influence.
+            </p>
+        </div>
+    </div>
+
+    <!-- Key Insights with Better Spacing -->
+    <div class="insight-grid" style="max-width: 1200px; margin: 0 auto 2rem; gap: 2rem;">
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-link"></i>
+            </div>
+            <h3>Autocorrelation</h3>
+            <p>When past values systematically influence future values, creating apparent patterns and persistence over time that can mimic meaningful trends.</p>
+        </div>
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-wave-square"></i>
+            </div>
+            <h3>Persistence</h3>
+            <p>Systems with memory show persistence where trends continue longer than expected by pure chance, creating the illusion of predictability.</p>
+        </div>
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-history"></i>
+            </div>
+            <h3>Illusory Trends</h3>
+            <p>Even random processes with memory can create trends that appear meaningful but are actually stochastic - a common pitfall in time series analysis.</p>
+        </div>
+    </div>
+
+    <!-- Understanding Section -->
+    <div class="lab-control-panel" style="max-width: 900px; margin: 3rem auto; background: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.6));">
+        <h2 class="control-title">
+            <i class="fas fa-graduation-cap"></i>
+            Understanding Temporal Memory
+        </h2>
+        <div style="color: var(--text-light); line-height: 1.7; padding: 1rem 0;">
+            <p style="margin-bottom: 1.5rem;">
+                <strong>Temporal memory</strong> (or autocorrelation) means that data points are not independent - each value contains some "memory" of previous values.
+                This is common in real-world data like stock prices, weather patterns, or physiological signals.
+            </p>
+            <p style="margin-bottom: 1.5rem;">
+                <strong>Key implication:</strong> When data has temporal memory, standard statistical tests that assume independence can give misleading results.
+                What looks like a significant trend might just be autocorrelation at work!
+            </p>
+            <p>
+                <strong>Experiment tip:</strong> Try setting memory strength to 0 (no memory) and compare with 0.9 (strong memory).
+                Notice how the strong memory creates smoother, more persistent patterns even though both are random processes.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div style="text-align: center; margin-top: 3rem; padding-bottom: 2rem;">
+    <a href="{{ url_for('index') }}" class="back-lab-button">
+        <i class="fas fa-arrow-left"></i> Back to Overview
+    </a>
+</div>
+
+<script>
+function updateMemoryValue(slider) {
+    const valueSpan = slider.parentElement.previousElementSibling.querySelector('.parameter-value');
+    if (slider.name === 'window') {
+        valueSpan.textContent = slider.value;
+    } else {
+        valueSpan.textContent = parseFloat(slider.value).toFixed(2);
+    }
+}
+</script>
+{% endblock %}

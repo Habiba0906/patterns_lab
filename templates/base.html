@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patterns in Data - {{ title if title else 'Interactive Lab' }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+</head>
+<body>
+    <!-- Floating AI Assistant Button -->
+    <button class="ai-assistant-btn" onclick="toggleChat()">
+        <i class="fas fa-robot"></i>
+        <span class="ai-pulse"></span>
+    </button>
+
+    <!-- AI Assistant Panel -->
+    <div class="ai-assistant-panel" id="aiPanel">
+        <div class="ai-header">
+            <h3><i class="fas fa-brain"></i> Data Guide</h3>
+            <button class="close-ai" onclick="toggleChat()">×</button>
+        </div>
+        <div class="ai-messages" id="aiMessages">
+            <div class="ai-message">
+                <p>Hi! I'm your data science guide. Ask me about noise, patterns, or anything on this page!</p>
+            </div>
+        </div>
+        <div class="ai-input">
+            <input type="text" id="aiInput" placeholder="Ask about data patterns..." onkeypress="handleAiKeyPress(event)">
+            <button onclick="sendAiMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav class="nav-lab">
+            <div class="nav-lab-container">
+                <a href="{{ url_for('index') }}" class="nav-lab-logo">
+                    <div class="logo-icon">📊</div>
+                    <div class="logo-text">
+                        <span class="logo-main">Patterns Lab</span>
+                        <span class="logo-sub">Interactive Data Science</span>
+                    </div>
+                </a>
+                <div class="nav-lab-links">
+                    <a href="{{ url_for('noise') }}" class="nav-lab-link">
+                        <i class="fas fa-wave-square"></i>
+                        <span>Signal & Noise</span>
+                    </a>
+                    <a href="{{ url_for('memory') }}" class="nav-lab-link">
+                        <i class="fas fa-history"></i>
+                        <span>Temporal Memory</span>
+                    </a>
+                    <a href="{{ url_for('correlation') }}" class="nav-lab-link">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>Structural Correlation</span>
+                    </a>
+                    <a href="{{ url_for('about') }}" class="nav-lab-link">
+                        <i class="fas fa-user"></i>
+                        <span>About</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-lab-content">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="lab-footer">
+            <div class="lab-footer-content">
+                <div class="lab-footer-left">
+                    <div class="footer-logo">🔬</div>
+                    <div>
+                        <p class="footer-title">Patterns in Data Lab</p>
+                        <p class="footer-sub">An interactive exploration of statistical patterns</p>
+                    </div>
+                </div>
+                <div class="lab-footer-right">
+                    <p>Built with Flask • Python • Matplotlib</p>
+                    <p class="footer-credit">© 2024 Data Science Explorer</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Simple AI Assistant Logic
+        const aiKnowledge = {
+            "what is noise": "Noise is random variation in data that obscures the true signal. Think of it like static on a radio broadcast! Try adjusting the noise slider to see how it affects the signal.",
+            "what is signal": "The signal is the true underlying pattern or information in your data. It's what you're trying to detect amidst all the noise.",
+            "temporal memory": "Temporal memory means data points are correlated with previous values. This creates persistence that can look like meaningful trends!",
+            "correlation": "Correlation measures how two variables move together. But beware: correlation doesn't mean causation!",
+            "patterns": "Patterns can be meaningful signals or just random noise. This lab helps you learn to tell the difference!",
+            "hello": "Hi! I'm your data guide. I can explain concepts like noise, signal, correlation, and temporal memory.",
+            "help": "Try asking about: 'What is noise?', 'What is signal?', 'Explain temporal memory', or 'What is correlation?'",
+            "default": "That's interesting! I know about data patterns, noise, signals, and correlations. Try asking me about those!"
+        };
+
+        function toggleChat() {
+            const panel = document.getElementById('aiPanel');
+            panel.classList.toggle('active');
+        }
+
+        function handleAiKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendAiMessage();
+            }
+        }
+
+        function sendAiMessage() {
+            const input = document.getElementById('aiInput');
+            const messages = document.getElementById('aiMessages');
+
+            if (input.value.trim() === '') return;
+
+            // Add user message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'user-message';
+            userMsg.innerHTML = `<p>${input.value}</p>`;
+            messages.appendChild(userMsg);
+
+            // Get AI response
+            const userText = input.value.toLowerCase();
+            let response = aiKnowledge.default;
+
+            for (const [key, value] of Object.entries(aiKnowledge)) {
+                if (userText.includes(key)) {
+                    response = value;
+                    break;
+                }
+            }
+
+            // Add AI response
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'ai-message';
+                aiMsg.innerHTML = `<p>${response}</p>`;
+                messages.appendChild(aiMsg);
+                messages.scrollTop = messages.scrollHeight;
+            }, 500);
+
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+        }
+    </script>
+</body>
+</html>

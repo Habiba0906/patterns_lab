@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero-lab">
+    <h1 class="hero-lab-title">Structural Correlation</h1>
+    <p class="hero-lab-subtitle">
+        How independent processes can appear correlated due to shared trends, smoothing, and windowing.
+    </p>
+</section>
+
+<div class="experiment-container">
+    <!-- Interactive Control Panel -->
+    <div class="lab-control-panel" style="max-width: 900px; margin: 0 auto 3rem;">
+        <h2 class="control-title">
+            <i class="fas fa-sliders-h"></i>
+            Interactive Parameters
+        </h2>
+
+        <form method="get" class="parameter-grid" style="max-width: 800px; margin: 0 auto;">
+            <!-- Memory Strength -->
+            <div class="parameter-group">
+                <div class="parameter-header">
+                    <span class="parameter-label">Memory Strength</span>
+                    <span class="parameter-value">{{ "%.2f"|format(memory) }}</span>
+                </div>
+                <input type="range"
+                       class="lab-slider"
+                       name="memory"
+                       min="0"
+                       max="1"
+                       step="0.05"
+                       value="{{ memory }}"
+                       oninput="updateCorrelationValue(this, '{{ "%.2f"|format(memory) }}'); this.form.submit()">
+                <div class="slider-ticks">
+                    <span>None</span>
+                    <span>Medium</span>
+                    <span>Strong</span>
+                </div>
+                <p class="parameter-explanation">
+                    Controls autocorrelation. Higher values make each data point more dependent on previous values.
+                </p>
+            </div>
+
+            <!-- Trend Strength -->
+            <div class="parameter-group">
+                <div class="parameter-header">
+                    <span class="parameter-label">Trend Strength</span>
+                    <span class="parameter-value">{{ "%.3f"|format(trend) }}</span>
+                </div>
+                <input type="range"
+                       class="lab-slider"
+                       name="trend"
+                       min="0"
+                       max="0.05"
+                       step="0.001"
+                       value="{{ trend }}"
+                       oninput="updateCorrelationValue(this, '{{ "%.3f"|format(trend) }}'); this.form.submit()">
+                <div class="slider-ticks">
+                    <span>None</span>
+                    <span>Moderate</span>
+                    <span>Strong</span>
+                </div>
+                <p class="parameter-explanation">
+                    Adds a linear trend to both series. Shared trends create apparent correlation.
+                </p>
+            </div>
+
+            <!-- Noise Level -->
+            <div class="parameter-group">
+                <div class="parameter-header">
+                    <span class="parameter-label">Noise Level</span>
+                    <span class="parameter-value">{{ "%.2f"|format(noise) }}</span>
+                </div>
+                <input type="range"
+                       class="lab-slider"
+                       name="noise"
+                       min="0.1"
+                       max="2"
+                       step="0.1"
+                       value="{{ noise }}"
+                       oninput="updateCorrelationValue(this, '{{ "%.2f"|format(noise) }}'); this.form.submit()">
+                <div class="slider-ticks">
+                    <span>Low</span>
+                    <span>Medium</span>
+                    <span>High</span>
+                </div>
+                <p class="parameter-explanation">
+                    Random noise added to each series. Higher values make the underlying patterns harder to see.
+                </p>
+            </div>
+
+            <!-- Smoothing Window -->
+            <div class="parameter-group">
+                <div class="parameter-header">
+                    <span class="parameter-label">Smoothing Window</span>
+                    <span class="parameter-value">{{ window }}</span>
+                </div>
+                <input type="range"
+                       class="lab-slider"
+                       name="window"
+                       min="5"
+                       max="50"
+                       step="5"
+                       value="{{ window }}"
+                       oninput="updateCorrelationValue(this, '{{ window }}'); this.form.submit()">
+                <div class="slider-ticks">
+                    <span>5</span>
+                    <span>25</span>
+                    <span>50</span>
+                </div>
+                <p class="parameter-explanation">
+                    Number of points for moving average smoothing. Larger windows create smoother but potentially misleading trends.
+                </p>
+            </div>
+        </form>
+    </div>
+
+    <!-- Visualization Section -->
+    <div class="lab-visualization" style="max-width: 1000px; margin: 0 auto 3rem;">
+        <h2 class="visualization-title">
+            <i class="fas fa-chart-line"></i>
+            Visualization
+        </h2>
+
+        <div class="visualization-wrapper">
+            <img src="{{ url_for('static', filename='figures/correlation.png') }}"
+                 alt="Structural Correlation plot"
+                 class="visualization-canvas">
+
+            <div class="visualization-legend">
+                <div class="legend-item">
+                    <span class="legend-dot" style="background-color: var(--primary-blue);"></span>
+                    <span class="legend-label">Process A</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background-color: var(--primary-green);"></span>
+                    <span class="legend-label">Process B</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background-color: var(--primary-blue); opacity: 0.4;"></span>
+                    <span class="legend-label">A (Smoothed)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background-color: var(--primary-green); opacity: 0.4;"></span>
+                    <span class="legend-label">B (Smoothed)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="visualization-insight">
+            <h3><i class="fas fa-lightbulb" style="color: var(--primary-yellow);"></i> Key Insight</h3>
+            <p>These two time series are mathematically independent (generated separately), yet they appear correlated due to <span class="hover-tooltip" data-tooltip="Both series have similar autocorrelation structure">shared memory</span>, <span class="hover-tooltip" data-tooltip="Both have an upward trend component">common trends</span>, and the <span class="hover-tooltip" data-tooltip="Moving average smoothing makes patterns look more similar">smoothing effect</span>. This demonstrates how <strong>correlation does not imply causation</strong>!</p>
+        </div>
+    </div>
+
+    <!-- Key Insights -->
+    <div class="insight-grid" style="max-width: 900px; margin: 0 auto;">
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-project-diagram"></i>
+            </div>
+            <h3>Spurious Correlation</h3>
+            <p>Independent processes can appear correlated when they share common external influences or structural properties.</p>
+        </div>
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-trend-up"></i>
+            </div>
+            <h3>Shared Trends</h3>
+            <p>Common trends, seasonal patterns, or smoothing can create apparent relationships between unrelated variables.</p>
+        </div>
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-filter"></i>
+            </div>
+            <h3>Smoothing Effects</h3>
+            <p>Data smoothing and windowing operations can introduce artificial correlations between time series.</p>
+        </div>
+    </div>
+</div>
+
+<div style="text-align: center; margin-top: 3rem;">
+    <a href="{{ url_for('index') }}" class="back-lab-button">
+        <i class="fas fa-arrow-left"></i> Back to Overview
+    </a>
+</div>
+
+<script>
+function updateCorrelationValue(slider, defaultValue) {
+    const valueSpan = slider.parentElement.querySelector('.parameter-value');
+    if (slider.name === 'window') {
+        valueSpan.textContent = slider.value;
+    } else if (slider.name === 'trend') {
+        valueSpan.textContent = parseFloat(slider.value).toFixed(3);
+    } else {
+        valueSpan.textContent = parseFloat(slider.value).toFixed(2);
+    }
+}
+
+// Initialize values on page load
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.lab-slider').forEach(slider => {
+        const valueSpan = slider.parentElement.querySelector('.parameter-value');
+        if (slider.name === 'window') {
+            valueSpan.textContent = slider.value;
+        } else if (slider.name === 'trend') {
+            valueSpan.textContent = parseFloat(slider.value).toFixed(3);
+        } else {
+            valueSpan.textContent = parseFloat(slider.value).toFixed(2);
+        }
+    });
+});
+</script>
+{% endblock %}

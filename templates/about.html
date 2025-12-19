@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero-lab">
+    <h1 class="hero-lab-title">About This Project</h1>
+    <p class="hero-lab-subtitle">
+        Exploring how patterns emerge in data — and how often they're misinterpreted
+    </p>
+</section>
+
+<div class="experiment-container">
+    <div class="lab-visualization" style="max-width: 800px; margin: 0 auto 3rem;">
+        <h2 class="visualization-title">
+            <i class="fas fa-seedling"></i>
+            Project Origin
+        </h2>
+
+        <div class="visualization-insight" style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.8));">
+            <p style="color: var(--text-light); line-height: 1.7; font-size: 1.1rem; margin-bottom: 1.5rem;">
+                I'm interested in how patterns emerge in data — and how often those patterns are misinterpreted.
+            </p>
+
+            <p style="color: var(--text-light); line-height: 1.7; font-size: 1.1rem; margin-bottom: 1.5rem;">
+                This project grew out of experimenting with simple statistical processes and noticing how easily structure, memory, and randomness can produce convincing signals. Rather than focusing on prediction or performance, the goal here is exploration: to see how noise can hide signals, how the past influences the present, and how correlation can arise without causation.
+            </p>
+
+            <p style="color: var(--text-light); line-height: 1.7; font-size: 1.1rem;">
+                The modules on this site are small, self-contained experiments. Each one is meant to encourage slower thinking about data, and a bit more skepticism toward results that look "obvious" at first glance.
+            </p>
+        </div>
+    </div>
+
+    <div class="insight-grid" style="max-width: 900px; margin: 0 auto 3rem;">
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-microscope"></i>
+            </div>
+            <h3>Exploration Focused</h3>
+            <p>This isn't about prediction or optimization — it's about understanding fundamental mechanisms through hands-on experimentation.</p>
+        </div>
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-question-circle"></i>
+            </div>
+            <h3>Questioning "Obvious"</h3>
+            <p>Each module encourages skepticism toward patterns that initially appear clear or meaningful in data.</p>
+        </div>
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-puzzle-piece"></i>
+            </div>
+            <h3>Self-Contained Experiments</h3>
+            <p>Small, focused modules that demonstrate specific statistical concepts through interactive visualization.</p>
+        </div>
+    </div>
+
+    <div class="lab-control-panel" style="max-width: 800px; margin: 0 auto;">
+        <h2 class="control-title">
+            <i class="fas fa-cogs"></i>
+            Technical Implementation
+        </h2>
+
+        <div class="parameter-grid">
+            <div class="parameter-group">
+                <div class="parameter-header">
+                    <span class="parameter-label">Backend</span>
+                </div>
+                <p class="parameter-explanation">
+                    Built with Python Flask for server-side logic, using NumPy and Matplotlib for statistical simulation and visualization.
+                </p>
+            </div>
+
+            <div class="parameter-group">
+                <div class="parameter-header">
+                    <span class="parameter-label">Frontend</span>
+                </div>
+                <p class="parameter-explanation">
+                    Modern HTML5, CSS3 with custom variables for theming, and vanilla JavaScript for interactive elements.
+                </p>
+            </div>
+
+            <div class="parameter-group">
+                <div class="parameter-header">
+                    <span class="parameter-label">Visualization</span>
+                </div>
+                <p class="parameter-explanation">
+                    Custom Matplotlib styling to match site aesthetics, with real-time plot generation based on user inputs.
+                </p>
+            </div>
+
+            <div class="parameter-group">
+                <div class="parameter-header">
+                    <span class="parameter-label">Deployment</span>
+                </div>
+                <p class="parameter-explanation">
+                    Designed for easy hosting on standard web servers, with clean separation between static and dynamic content.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="lab-visualization" style="max-width: 800px; margin: 3rem auto;">
+        <h2 class="visualization-title">
+            <i class="fas fa-comment-dots"></i>
+            Why This Matters
+        </h2>
+
+        <div style="color: var(--text-light); line-height: 1.7; padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border-radius: 12px;">
+            <p style="margin-bottom: 1.5rem;">
+                In an era of increasingly data-driven decisions, developing intuition for statistical patterns — and their potential pitfalls — feels essential. This project represents my attempt to make those intuitions more accessible.
+            </p>
+            <p>
+                By building interactive tools that reveal how easily randomness can masquerade as signal, I hope to encourage more careful, thoughtful engagement with data in both professional and everyday contexts.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="lab-visualization" style="max-width: 800px; margin: 4rem auto;">
+    <h2 class="visualization-title">
+        <i class="fas fa-share-alt"></i>
+        Continue Exploring
+    </h2>
+    <div style="text-align: center; padding: 2rem;">
+        <a href="{{ url_for('index') }}" class="lab-button" style="display: inline-flex; align-items: center; gap: 0.75rem;">
+            <i class="fas fa-home"></i> Back to Home
+        </a>
+    </div>
+</div>
+
+{% endblock %}
